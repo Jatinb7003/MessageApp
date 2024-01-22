@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Log In Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: antiquewhite;
+            padding: 0;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333333;
+            margin-top: 50px;
+            background-color: rgb(244, 5, 5);
+        }
+
+        div {
+            width: 30%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #71d8f0;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #cccccc;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align:center;font-size:50px;margin-top:0%;padding:8px;">Log In Page</h1>
+    <div>
+        <!-- <form action="/login" method="post"> -->
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <p style="color: red;display: none;" id="p"></p>
+
+            <!-- <% if(error){ %> -->
+                <!-- <% } %> -->
+                    <input type="submit" value="Log In" id="submit">
+        <!-- </form> -->
+        <br><br>
+        <a style="margin-left: 30%;margin-top: 0;text-align: center;" href="/forgetpassword">Forget Password?</a>
+            <p>Doesn't have an account? <a href="/signup">Signup</a></p>
+    </div>
+</body>
+<script>
+    let username=document.getElementById('username');
+    let password=document.getElementById('password');
+    let submit=document.getElementById('submit');
+    let p=document.getElementById('p');
+    submit.addEventListener('click',()=>{
+        if(username.value&&password.value)
+        {
+            fetch('/login',{method:'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({username:username.value})})
+            .then((res)=>{
+                if(res.status===200)
+                {
+                    console.log(res.json)
+                    return res.json();
+                }
+                else
+                {
+                    throw new Error("Invalid Username or Password");
+                }
+            })
+            .then((pass)=>{
+                if(pass===password.value)
+                {
+                    location.href='/group';
+                }
+                else
+                {
+                    p.innerText="Incorrect username or password";
+                    p.style.display='block';
+                }
+            })
+            .catch((error)=>{
+                alert(error);
+            })
+        }
+        else
+        {
+            alert("Please fill out all fields");
+        }
+    })
+
+</script>
+</html>

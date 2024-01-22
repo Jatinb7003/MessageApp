@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Sign Up Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: antiquewhite;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333333;
+      margin-top: 20px;
+    }
+
+    #div {
+      width: 30%;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: #71d8f0;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px #cccccc;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: #333333;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] ,
+    select{
+      width: 100%;
+      padding: 5px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      box-sizing: border-box;
+    }
+
+    button{
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-left: 150px;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background-color: #1bc721;
+    }
+  </style>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+
+<body>
+  <h1 style="background-color:red;text-align:center;font-size:50px;margin-top:0%;padding:8px;">Sign Up Page</h1>
+  <div>
+  <div id="div">
+    <!-- <form action="/signup" method="post"> -->
+
+    <label for="fullname">Username</label>
+    <input type="text" name="fullname" id="fullname">
+    <p id="p1" style="display: none;color: red;margin: 2px;margin-bottom: 10px;font-size: 10px;">Username not available!</p>
+
+    <label for="username">E-Mail:</label>
+    <input type="email" id="username" name="username" required>
+    <p id="p2" style="display: none;color: red;margin: 2px;margin-bottom: 10px;font-size: 10px;"></p>
+
+    <label for="region">Region:</label>
+    <select name="region" id="region">
+      <option value="" disabled selected>Select your region.</option>
+      <option value="J&K">Jammu & Kashmir</option>
+      <option value="Andhra Pradesh">Andhra Pradesh</option>
+      <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+      <option value="Assam">Assam</option>
+      <option value="Bihar">Bihar</option>
+      <option value="Chhattisgarh">Chhattisgarh</option>
+      <option value="Goa">Goa</option>
+      <option value="Gujarat">Gujarat</option>
+      <option value="Haryana">Haryana</option>
+      <option value="Himachal Pradesh">Himachal Pradesh</option>
+      <option value="Jharkhand">Jharkhand</option>
+      <option value="Karnataka">Karnataka</option>
+      <option value="Kerala">Kerala</option>
+      <option value="Madhya Pradesh">Madhya Pradesh</option>
+      <option value="Maharashtra">Maharashtra</option>
+      <option value="Manipur">Manipur</option>
+      <option value="Meghalaya">Meghalaya</option>
+      <option value="Mizoram">Mizoram</option>
+      <option value="Nagaland">Nagaland</option>
+      <option value="Odisha">Odisha</option>
+      <option value="Punjab">Punjab</option>
+      <option value="Rajasthan">Rajasthan</option>
+      <option value="Sikkim">Sikkim</option>
+      <option value="Tamil Nadu">Tamil Nadu</option>
+      <option value="Telangana">Telangana</option>
+      <option value="Tripura">Tripura</option>
+      <option value="Uttar Pradesh">Uttar Pradesh</option>
+      <option value="Uttarakhand">Uttarakhand</option>
+      <option value="West Bengal">West Bengal</option>
+    </select>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <p id="p3" style="display: none;color: red;margin: 2px;margin-bottom: 10px;font-size: 10px;"></p>
+
+    <label for="confirmpassword">Confirm Password</label>
+    <input type="password" name="confirmpassword" id="confirmpassword" required>
+    <p id="p4" style="display: none;color: red;margin: 2px;margin-bottom: 10px;font-size: 10px;"></p>
+
+    <% if(error){ %>
+      <p style="color: red;">
+        <%= error %>
+      </p>
+      <% } %>
+        <button id="submit" disabled>Sign up</button>
+        
+        <p>Already have an account? <a href="/">Login</a></p>
+  </div>
+</div>
+</body>
+<script>
+  let username = document.getElementById("username");
+
+  let fullname = document.getElementById("fullname");
+
+  let password = document.getElementById("password");
+  let submit = document.getElementById('submit');
+  let confirmpassword = document.getElementById('confirmpassword');
+  let p1 = document.getElementById('p1');
+  let p2 = document.getElementById('p2');
+  let p3 = document.getElementById('p3');
+  let p4 = document.getElementById('p4');
+
+  fullname.addEventListener('keyup',()=>
+  {
+    let user=document.getElementById('fullname').value;
+    if(/^[a-z0-9_]+$/.test(user)&&user.trim())
+    {
+      fetch('/checkUsername',{ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({username:user})})
+      .then((res)=>
+      {
+        if(res.status===200)
+        {
+          p1.innerText='Valid Username';
+          p1.style.color='green';
+          p1.style.display='block';
+        }
+        else
+        {
+          p1.innerText='Username Unavailable';
+          p1.style.color='red';
+          p1.style.display='block';
+        }
+      })
+      .catch((error)=>
+      {
+        if(error)
+        {
+          alert(error);
+        }
+      })
+    }
+    else
+    {
+      p1.innerText='Enter a valid username';
+      p1.style.display='block';
+      p1.style.color='red';
+    }
+  })
+
+  username.addEventListener('keyup', function () {
+    let usernamevalue = document.getElementById('username').value;
+    let name = document.getElementById("fullname").value.trim();
+    if (name) {
+      p2.style.display = 'block';
+      p1.style.display = 'none';
+      if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(usernamevalue)) {
+        p2.innerText = 'Valid mail';
+        p2.style.color = 'green';
+      }
+      else {
+        p2.innerText = 'Invalid mail';
+        p2.style.color = 'red';
+      }
+    }
+    else {
+      p1.style.display = 'block';
+      p1.style.color = 'red';
+    }
+  });
+
+  password.addEventListener('keyup', function () {
+    let usernamevalue = document.getElementById('username').value.trim();
+    let name = document.getElementById("fullname").value.trim();
+    if (name) {
+      p1.style.display = 'none';
+      if (usernamevalue) {
+        p2.style.display = 'none';
+        p3.style.display = 'block';
+        let passwordvalue = document.getElementById('password').value;
+        if(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(passwordvalue)) {
+          p3.innerText = 'Valid password';
+          p3.style.color = 'green';
+        }
+        else {
+          p3.innerText = 'Invalid password';
+          p3.style.color = 'red';
+        }
+      }
+      else {
+        p2.style.display = 'block';
+        p2.innerText = 'Enter mail.'
+        p2.style.color = 'red';
+      }
+    }
+    else {
+      p1.style.display = 'block';
+      p1.style.color = 'red';
+    }
+  });
+
+  confirmpassword.addEventListener('keyup', function () {
+    let usernamevalue = document.getElementById('username').value;
+    let namevalue = document.getElementById("fullname").value.trim();
+    let passwordvalue = document.getElementById('password').value;
+    if (namevalue) {
+      p1.style.display = 'none';
+      if (username) {
+        p2.style.display = 'none';
+        if (passwordvalue) {
+          p3.style.display = 'none';
+          let confirmpasswordvalue = document.getElementById('confirmpassword').value;
+          p4.style.display = 'block';
+          if (confirmpasswordvalue == passwordvalue) {
+            p4.innerText = 'Matched';
+            p4.style.color = 'green';
+            submit.removeAttribute('disabled');
+          }
+          else {
+            p4.innerText = 'Not matched';
+            p4.style.color = 'red';
+          }
+        }
+        else {
+          p3.innerText = 'Enter password.';
+          p3.style.color = 'red';
+          p3.style.display = 'block';
+        }
+      }
+      else {
+        p2.style.display = 'block';
+        p2.innerText = 'Enter mail.'
+        p2.style.color = 'red';
+      }
+    }
+    else {
+      p1.style.display = 'block';
+      p1.style.color = 'red';
+    }
+  })
+
+  submit.addEventListener('click', function () {
+    let username = document.getElementById("username").value;
+
+    let fullname = document.getElementById("fullname").value.trim();
+
+    let password = document.getElementById("password").value;
+    let region=document.getElementById("region").value;
+
+    fetch('/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: fullname, email: username, password: password,region:region }) })
+      .then(function (res) {
+        if (res.status == 200) {
+          location.href = '/submitSuccessfully';
+        }
+        else if (res.status == 300) {
+          swal({
+            title: "Email Already Exists",
+            // text: `Deleted Successfully...`,
+            icon: "warning",
+            // button: "okk",
+          });
+        }
+      })
+  })
+
+</script>
+
+</html>
