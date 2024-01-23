@@ -22,7 +22,8 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <title></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>Message App</title>
     <style>
         * {
             padding: 0%;
@@ -220,6 +221,9 @@
             <span style="font-size: 40px;background-color: transparent;" class="material-symbols-outlined">groups</span>
             <input style="margin-bottom: 20px;border-radius: 10px;text-align: center;" type="text"
                 placeholder="Search group here" name="searchGroup" id="searchGroup">
+            <button id="searchGroupButton" class="material-symbols-outlined">
+                search
+               </button>
             <button style="background-color: transparent;border: none;" id="addGroup"><span
                     style="background-color: transparent;" class="material-symbols-outlined">group_add</span></button>
             <button id="popup-btn">Requests</button>
@@ -317,6 +321,44 @@
     const postList=document.getElementById("postList");
     const logout = document.getElementById("logout");
     const postDiv=document.getElementById("postDiv");
+    // const searchGroupButton=document.getElementById('searchGroupButton');
+
+
+    searchGroup.addEventListener('keyup',()=>{
+        let searchGroup=document.getElementById('searchGroup');
+        let flag=0;
+        let childElementCount;
+        let text;
+        // if(searchGroup.value && searchGroup.value.trim())
+        // {
+            childElementCount=groupList.childElementCount;
+           for(var i=0;i<childElementCount;i++)
+           {
+            // console.log(groupList.children[i].textContent)  
+            text= groupList.children[i].textContent.replace('group ','');
+            if(text.search(searchGroup.value)>-1)
+            {
+                groupList.children[i].style.display='block';
+                flag=1;
+            }
+            else
+            {
+                groupList.children[i].style.display='none';
+            }
+           }
+           if(flag==0)
+           {
+            let li=document.createElement('li');
+            li.innerHTML="No groups found!";
+            groupList.appendChild(li);
+           }
+        }
+        // else
+        // {
+        //     alert("Noting to search");
+        // }
+    // }
+    )
 
     logout.addEventListener('click', () => {
         fetch('/logout')
@@ -503,13 +545,14 @@
 
     function addGroupToDom() {
         getGroups((groups, error) => {
-            // console.log(groups)
+            groupList.innerHTML='';
             groups.forEach(group => {
                 let li = document.createElement('li');
                 let span = document.createElement('span');
                 span.classList.add('material-symbols-outlined');
                 span.innerText = 'group';
                 li.innerHTML = `<span style="background-color: transparent;" class="material-symbols-outlined">group</span> ${group.name}`;
+                li.style.display='block';
                 groupList.appendChild(li);
                 li.addEventListener('click', () => {
                     fetch('/checkAdmin', { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: group.id }) })

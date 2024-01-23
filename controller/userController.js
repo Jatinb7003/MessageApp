@@ -90,6 +90,10 @@ function userSignup(req, res) {
 function userLogin(req, res) {
     if(req.session.user)
     {
+        res.render('group');
+    }
+    else
+    {
         let user = req.body;
         sql.findUser(user)
         .then((data) => {
@@ -109,10 +113,7 @@ function userLogin(req, res) {
             res.status(500);
             res.send();
         })
-    }
-    else
-    {
-        res.redirect('/');
+       
     }
     
 }
@@ -150,16 +151,7 @@ function getGroups(req, res) {
     {
         sql.getGroups(req.session.user)
             .then((data) => {
-                // data=JSON.parse(JSON.stringify(data));
-                console.log(data)
-                sql.getCreatedGroups(req.session.user)
-                    .then((data) => {
-                        console.log(data);
-                    })
-                    .catch((error) => {
-                        res.status(300);
-                        res.send();
-                    })
+                res.status(200).json(data);
             })
             .catch((error) => {
                 res.status(300);

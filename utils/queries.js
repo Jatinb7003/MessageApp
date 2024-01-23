@@ -40,17 +40,8 @@ function createGroup(group) {
 }
 function getGroups(user) {
     return new Promise((resolve, reject) => {
-        sql.query(`select *,count(message) FROM messages,groups where (userId='${user}' and messages.groupId=groups.id) GROUP BY groupId ORDER BY count(message) DESC;`, (err, result, fields) => {
-            if (err) reject(err);
-            if (result) resolve(result);
-        })
-    })
-}
-
-function getCreatedGroups(user)
-{
-    return new Promise((resolve, reject) => {
-        sql.query(`select * FROM messages,groups where (createdBy='${user}' and messages.groupId!=groups.id) orderBy groups.time DESC;`, (err, result, fields) => {
+        sql.query(`SELECT * FROM groups g LEFT JOIN messages m ON g.id = m.groupId WHERE g.createdBy = '${user}' or m.userId='${user}' GROUP BY g.id ORDER BY COUNT(m.message) DESC,g.time DESC;
+        `, (err, result, fields) => {
             if (err) reject(err);
             if (result) resolve(result);
         })
